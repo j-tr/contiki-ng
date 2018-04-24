@@ -56,6 +56,7 @@
 #include "dev/rtcc.h"
 #include "dev/button-hal.h"
 #include "usb/usb-serial.h"
+#include "lib/csprng.h"
 #include "lib/random.h"
 #include "lib/sensors.h"
 #include "net/netstack.h"
@@ -219,6 +220,9 @@ platform_init_stage_two()
   crypto_init();
   crypto_disable();
 #endif
+#if CSPRNG_ENABLED
+  csprng_init();
+#endif /* CSPRNG_ENABLED */
 
   /* Populate linkaddr_node_addr */
   ieee_addr_cpy_to(linkaddr_node_addr.u8, LINKADDR_SIZE);
