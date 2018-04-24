@@ -98,6 +98,14 @@
 #define NETSTACK_RADIO   nullradio_driver
 #endif /* NETSTACK_CONF_RADIO */
 
+#ifndef NETSTACK_RADIO_ASYNC
+#ifdef NETSTACK_CONF_RADIO_ASYNC
+#define NETSTACK_RADIO_ASYNC NETSTACK_CONF_RADIO_ASYNC
+#else /* NETSTACK_CONF_RADIO_ASYNC */
+#define NETSTACK_RADIO_ASYNC nullradioasync_driver
+#endif /* NETSTACK_CONF_RADIO_ASYNC */
+#endif /* NETSTACK_RADIO_ASYNC */
+
 /* Framer selection. The framer is used by the MAC implementation
    to build and parse frames. */
 #ifdef NETSTACK_CONF_FRAMER
@@ -109,6 +117,7 @@
 #include "net/mac/mac.h"
 #include "net/mac/framer/framer.h"
 #include "dev/radio.h"
+#include "dev/radio-async.h"
 #include "net/linkaddr.h"
 
 /**
@@ -131,6 +140,7 @@ extern const struct routing_driver NETSTACK_ROUTING;
 extern const struct network_driver NETSTACK_NETWORK;
 extern const struct mac_driver NETSTACK_MAC;
 extern const struct radio_driver NETSTACK_RADIO;
+extern const struct radio_async_driver NETSTACK_RADIO_ASYNC;
 extern const struct framer NETSTACK_FRAMER;
 
 void netstack_init(void);

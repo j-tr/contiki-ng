@@ -87,6 +87,7 @@ void
 netstack_init(void)
 {
   NETSTACK_RADIO.init();
+  NETSTACK_RADIO_ASYNC.init();
   NETSTACK_MAC.init();
   NETSTACK_NETWORK.init();
 }
