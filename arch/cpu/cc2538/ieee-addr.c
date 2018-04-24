@@ -47,7 +47,6 @@ ieee_addr_cpy_to(uint8_t *dst, uint8_t len)
 {
   if(IEEE_ADDR_CONF_HARDCODED) {
     uint8_t ieee_addr_hc[8] = IEEE_ADDR_CONF_ADDRESS;
-
     memcpy(dst, &ieee_addr_hc[8 - len], len);
   } else {
     /*
@@ -70,11 +69,16 @@ ieee_addr_cpy_to(uint8_t *dst, uint8_t len)
     if(((uint8_t *)IEEE_ADDR_LOCATION)[3] == oui_ti[0]
        && ((uint8_t *)IEEE_ADDR_LOCATION)[2] == oui_ti[1]
        && ((uint8_t *)IEEE_ADDR_LOCATION)[1] == oui_ti[2]) {
-      for(i = 0; i < len / 2; i++) {
-        dst[i] = ((uint8_t *)IEEE_ADDR_LOCATION)[len / 2 - 1 - i];
-      }
-      for(i = 0; i < len / 2; i++) {
-        dst[i + len / 2] = ((uint8_t *)IEEE_ADDR_LOCATION)[len - 1 - i];
+      if(len == 2) {
+        dst[0] = ((uint8_t *)IEEE_ADDR_LOCATION)[5];
+        dst[1] = ((uint8_t *)IEEE_ADDR_LOCATION)[4];
+      } else {
+        for(i = 0; i < len / 2; i++) {
+          dst[i] = ((uint8_t *)IEEE_ADDR_LOCATION)[len / 2 - 1 - i];
+        }
+        for(i = 0; i < len / 2; i++) {
+          dst[i + len / 2] = ((uint8_t *)IEEE_ADDR_LOCATION)[len - 1 - i];
+        }
       }
     } else {
       for(i = 0; i < len; i++) {

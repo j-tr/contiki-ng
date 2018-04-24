@@ -77,4 +77,33 @@ linkaddr_set_node_addr(linkaddr_t *t)
   linkaddr_copy(&linkaddr_node_addr, t);
 }
 /*---------------------------------------------------------------------------*/
+void
+linkaddr_to_eui_64(uint8_t *dst, const linkaddr_t *addr)
+{
+#if LINKADDR_SIZE == 2
+  /* derive EUI64 as per RFC 6282 */
+  dst[0] = 0x00;
+  dst[1] = 0x00;
+  dst[2] = 0x00;
+  dst[3] = 0xFF;
+  dst[4] = 0xFE;
+  dst[5] = 0x00;
+  dst[6] = addr->u8[0];
+  dst[7] = addr->u8[1];
+#elif LINKADDR_SIZE == 8
+  memcpy(dst, addr->u8, 8);
+#endif /* LINKADDR_SIZE == 1 */
+}
+/*---------------------------------------------------------------------------*/
+void
+linkaddr_from_eui_64(linkaddr_t *addr, const uint8_t *src)
+{
+#if LINKADDR_SIZE == 2
+  addr->u8[0] = src[6];
+  addr->u8[1] = src[7];
+#elif LINKADDR_SIZE == 8
+  memcpy(addr->u8, src, 8);
+#endif /* LINKADDR_SIZE == 1 */
+}
+/*---------------------------------------------------------------------------*/
 /** @} */
