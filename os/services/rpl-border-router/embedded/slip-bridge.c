@@ -95,9 +95,11 @@ slip_input_callback(void)
       int j;
       /* this is just a test so far... just to see if it works */
       uip_buf[0] = '!';
+      uint8_t eui64[8];
+      linkaddr_to_eui_64(eui64, (linkaddr_t *)uip_lladdr.addr);
       for(j = 0; j < 8; j++) {
-        uip_buf[2 + j * 2] = hexchar[uip_lladdr.addr[j] >> 4];
-        uip_buf[3 + j * 2] = hexchar[uip_lladdr.addr[j] & 15];
+        uip_buf[2 + j * 2] = hexchar[eui64[j] >> 4];
+        uip_buf[3 + j * 2] = hexchar[eui64[j] & 15];
       }
       uip_len = 18;
       slip_write(uip_buf, uip_len);

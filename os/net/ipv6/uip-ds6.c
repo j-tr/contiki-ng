@@ -553,8 +553,6 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
 void
 uip_ds6_set_addr_iid(uip_ipaddr_t *ipaddr, uip_lladdr_t *lladdr)
 {
-  /* We consider only links with IEEE EUI-64 identifier or
-   * IEEE 48-bit MAC addresses */
 #if (UIP_LLADDR_LEN == 8)
   memcpy(ipaddr->u8 + 8, lladdr, UIP_LLADDR_LEN);
   ipaddr->u8[8] ^= 0x02;
@@ -564,8 +562,10 @@ uip_ds6_set_addr_iid(uip_ipaddr_t *ipaddr, uip_lladdr_t *lladdr)
   ipaddr->u8[12] = 0xfe;
   memcpy(ipaddr->u8 + 13, (uint8_t *)lladdr + 3, 3);
   ipaddr->u8[8] ^= 0x02;
+#elif (UIP_LLADDR_LEN == 2)
+  linkaddr_to_eui_64(ipaddr->u8 + 8, (linkaddr_t *)lladdr);
 #else
-#error uip-ds6.c cannot build interface address when UIP_LLADDR_LEN is not 6 or 8
+#error uip-ds6.c cannot build interface address when UIP_LLADDR_LEN is not 6, 8, or 2
 #endif
 }
 
@@ -576,8 +576,10 @@ uip_ds6_set_lladdr_from_iid(uip_lladdr_t *lladdr, const uip_ipaddr_t *ipaddr)
 #if (UIP_LLADDR_LEN == 8)
   memcpy(lladdr, ipaddr->u8 + 8, UIP_LLADDR_LEN);
   lladdr->addr[0] ^= 0x02;
+#elif (UIP_LLADDR_LEN == 2)
+  linkaddr_from_eui_64((linkaddr_t *)lladdr, ipaddr->u8 + 8);
 #else
-#error uip-ds6.c cannot build lladdr address when UIP_LLADDR_LEN is not 8
+#error uip-ds6.c cannot build lladdr address when UIP_LLADDR_LEN is not 8 or 2
 #endif
 }
 
