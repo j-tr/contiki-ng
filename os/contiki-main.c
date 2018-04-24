@@ -93,7 +93,9 @@ main(void)
   LOG_INFO("- 802.15.4 PANID: 0x%04x\n", IEEE802154_PANID);
 #if MAC_CONF_WITH_TSCH
   LOG_INFO("- 802.15.4 TSCH default hopping sequence length: %u\n", (unsigned)sizeof(TSCH_DEFAULT_HOPPING_SEQUENCE));
-#else /* MAC_CONF_WITH_TSCH */
+#elif MAC_CONF_WITH_CSL
+  LOG_INFO("- 802.15.4 CSL default hopping sequence length: 16\n");
+#else /* MAC_CONF_WITH_CSL */
   LOG_INFO("- 802.15.4 Default channel: %u\n", IEEE802154_DEFAULT_CHANNEL);
 #endif /* MAC_CONF_WITH_TSCH */
 
