@@ -43,4 +43,24 @@
 #define UIP_CONF_TCP 1
 #endif
 
+/* SLIP does not work otherwise */
+#undef LPM_CONF_MAX_PM
+#define LPM_CONF_MAX_PM 0
+#undef LPM_CONF_ENABLED
+#define LPM_CONF_ENABLED 0
+
+/* configure RADIO layer */
+#include "cpu/cc2538/dev/cc2538-rf-async-autoconf.h"
+
+/* configure MAC layer */
+#include "net/mac/csl/csl-autoconf.h"
+
+/* set a seeder */
+#undef CSPRNG_CONF_SEEDER
+#define CSPRNG_CONF_SEEDER iq_seeder
+
+/* increase queubufs */
+#undef QUEUEBUF_CONF_NUM
+#define QUEUEBUF_CONF_NUM 20
+
 #endif /* PROJECT_CONF_H_ */

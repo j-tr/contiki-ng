@@ -11,4 +11,7 @@ MODULES += os/net/app-layer/coap
 MODULES_REL += ./resources
 
 CONTIKI=../../..
+
+MAKE_MAC = MAKE_MAC_CSL
+
 include $(CONTIKI)/Makefile.include
