@@ -166,6 +166,12 @@
 #define IS_COMPRESSABLE_PROTO(x) (x == UIP_PROTO_UDP)
 #endif /* COMPRESS_EXT_HDR */
 
+#ifdef SICSLOWPAN_CONF_INIT_QUEUEBUF
+#define INIT_QUEUEBUF SICSLOWPAN_CONF_INIT_QUEUEBUF
+#else /* SICSLOWPAN_CONF_INIT_QUEUEBUF */
+#define INIT_QUEUEBUF SICSLOWPAN_CONF_FRAG
+#endif /* SICSLOWPAN_CONF_INIT_QUEUEBUF */
+
 /** \name General variables
  *  @{
  */
@@ -2021,9 +2027,9 @@ sicslowpan_init(void)
 #endif /* SICSLOWPAN_COMPRESSION == SICSLOWPAN_COMPRESSION_IPHC */
 
   /* We use the queuebuf module if fragmentation is enabled */
-#if SICSLOWPAN_CONF_FRAG
+#if INIT_QUEUEBUF
   queuebuf_init();
-#endif
+#endif /* INIT_QUEUEBUF */
 }
 /*--------------------------------------------------------------------*/
 int
