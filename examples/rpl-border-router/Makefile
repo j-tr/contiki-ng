@@ -13,6 +13,7 @@ MODULES_REL += webserver
 include $(CONTIKI)/Makefile.identify-target
 MODULES_REL += $(TARGET)
 
-MAKE_MAC = MAKE_MAC_CSL
+MAKE_MAC = MAKE_MAC_CSMA
+MODULES += os/net/security/akes
 
 include $(CONTIKI)/Makefile.include

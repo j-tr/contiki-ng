@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, Swedish Institute of Computer Science.
+ * Copyright (c) 2017, Hasso-Plattner-Institut.
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -26,22 +26,12 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
+ * This file is part of the Contiki operating system.
+ *
  */
 
 #ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
-
-#ifndef WEBSERVER_CONF_CFS_CONNS
-#define WEBSERVER_CONF_CFS_CONNS 2
-#endif
-
-#ifndef BORDER_ROUTER_CONF_WEBSERVER
-#define BORDER_ROUTER_CONF_WEBSERVER 1
-#endif
-
-#if BORDER_ROUTER_CONF_WEBSERVER
-#define UIP_CONF_TCP 1
-#endif
 
 /* configure MAC layer */
 #include "net/mac/csma/csma-autoconf.h"
@@ -51,9 +41,5 @@
 /* set a seeder */
 #undef CSPRNG_CONF_SEEDER
 #define CSPRNG_CONF_SEEDER iq_seeder
-
-/* increase queubufs */
-#undef QUEUEBUF_CONF_NUM
-#define QUEUEBUF_CONF_NUM 20
 
 #endif /* PROJECT_CONF_H_ */

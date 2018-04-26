@@ -106,7 +106,7 @@
 /* Log configuration */
 #include "sys/log.h"
 #define LOG_MODULE "AKES"
-#define LOG_LEVEL LOG_LEVEL_MAC
+#define LOG_LEVEL LOG_LEVEL_DBG
 
 static void on_hello_sent(void *ptr, int status, int transmissions);
 static void on_hello_done(void *ptr);
