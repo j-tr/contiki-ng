@@ -49,6 +49,7 @@
 #include "net/netstack.h"
 #include "lib/list.h"
 #include "lib/memb.h"
+#include "net/security/akes/akes-mac.h"
 
 #if CONTIKI_TARGET_COOJA
 #include "lib/simEnvChange.h"
@@ -466,9 +467,10 @@ csma_output_packet(mac_callback_t sent, void *ptr)
 {
   struct packet_queue *q;
   struct neighbor_queue *n;
+  const linkaddr_t *addr = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
+#if !AKES_MAC_ENABLED
   static uint8_t initialized = 0;
   static uint8_t seqno;
-  const linkaddr_t *addr = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
 
   if(!initialized) {
     initialized = 1;
@@ -483,6 +485,7 @@ csma_output_packet(mac_callback_t sent, void *ptr)
   }
   packetbuf_set_attr(PACKETBUF_ATTR_MAC_SEQNO, seqno++);
   packetbuf_set_attr(PACKETBUF_ATTR_FRAME_TYPE, FRAME802154_DATAFRAME);
+#endif /* !AKES_MAC_ENABLED */
 
   /* Look for the neighbor entry */
   n = neighbor_queue_from_addr(addr);
