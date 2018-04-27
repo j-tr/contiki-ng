@@ -253,6 +253,10 @@ parse(void)
       }
     }
     packetbuf_set_addr(PACKETBUF_ADDR_SENDER, (linkaddr_t *)&frame.src_addr);
+    if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER), &linkaddr_node_addr)) {
+      LOG_ERR("frame from ourselves\n");
+      return FRAMER_FAILED;
+    }
     if(frame.fcf.sequence_number_suppression == 0) {
       packetbuf_set_attr(PACKETBUF_ATTR_MAC_SEQNO, frame.seq);
     } else {
