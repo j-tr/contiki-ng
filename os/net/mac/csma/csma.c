@@ -61,11 +61,7 @@ static void
 input_packet(void)
 {
 #if CSMA_SEND_SOFT_ACK
-  int original_datalen;
-  uint8_t *original_dataptr;
-
-  original_datalen = packetbuf_datalen();
-  original_dataptr = packetbuf_dataptr();
+  uint8_t ackdata[CSMA_ACK_LEN];
 #endif
 
   if(packetbuf_datalen() == CSMA_ACK_LEN) {
@@ -94,20 +90,12 @@ input_packet(void)
 #endif /* !AKES_MAC_ENABLED */
 
 #if CSMA_SEND_SOFT_ACK
-    {
-      frame802154_t info154;
-      frame802154_parse(original_dataptr, original_datalen, &info154);
-      if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
-         info154.fcf.ack_required != 0 &&
-         linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                      &linkaddr_node_addr)) {
-        uint8_t ackdata[CSMA_ACK_LEN] = {0, 0, 0};
-
-        ackdata[0] = FRAME802154_ACKFRAME;
-        ackdata[1] = 0;
-        ackdata[2] = info154.seq;
-        NETSTACK_RADIO.send(ackdata, CSMA_ACK_LEN);
-      }
+    if(!packetbuf_holds_broadcast()
+        && packetbuf_attr(PACKETBUF_ATTR_MAC_ACK)) {
+      ackdata[0] = FRAME802154_ACKFRAME;
+      ackdata[1] = 0;
+      ackdata[2] = ((uint8_t *)packetbuf_hdrptr())[2];
+      NETSTACK_RADIO.send(ackdata, CSMA_ACK_LEN);
     }
 #endif /* CSMA_SEND_SOFT_ACK */
     if(!duplicate) {
