@@ -217,7 +217,6 @@ platform_init_stage_two()
 
 #if CRYPTO_CONF_INIT
   crypto_init();
-  crypto_disable();
 #endif
 
   /* Populate linkaddr_node_addr */

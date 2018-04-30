@@ -78,15 +78,6 @@
  */
 void crypto_init(void);
 
-/** \brief Enables the AES/SHA cryptoprocessor
- */
-void crypto_enable(void);
-
-/** \brief Disables the AES/SHA cryptoprocessor
- * \note Call this function to save power when the cryptoprocessor is unused.
- */
-void crypto_disable(void);
-
 /** \brief Registers a process to be notified of the completion of a crypto
  * operation
  * \param p Process to be polled upon IRQ

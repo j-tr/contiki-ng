@@ -53,24 +53,7 @@
 #else
 #define PRINTF(...)
 #endif
-/*---------------------------------------------------------------------------*/
-static uint8_t
-enable_crypto(void)
-{
-  uint8_t enabled = CRYPTO_IS_ENABLED();
-  if(!enabled) {
-    crypto_enable();
-  }
-  return enabled;
-}
-/*---------------------------------------------------------------------------*/
-static void
-restore_crypto(uint8_t enabled)
-{
-  if(!enabled) {
-    crypto_disable();
-  }
-}
+
 /*---------------------------------------------------------------------------*/
 static void
 set_key(const uint8_t *key)
@@ -83,16 +66,13 @@ aead(const uint8_t *nonce, uint8_t *m, uint8_t m_len, const uint8_t *a,
      uint8_t a_len, uint8_t *result, uint8_t mic_len, int forward)
 {
   uint16_t cdata_len;
-  uint8_t crypto_enabled, ret;
-
-  crypto_enabled = enable_crypto();
+  uint8_t ret;
 
   if(forward) {
     ret = ccm_auth_encrypt_start(CCM_STAR_LEN_LEN, CC2538_AES_128_KEY_AREA,
                                  nonce, a, a_len, m, m_len, m, mic_len, NULL);
     if(ret != CRYPTO_SUCCESS) {
       PRINTF("%s: ccm_auth_encrypt_start() error %u\n", MODULE_NAME, ret);
-      restore_crypto(crypto_enabled);
       return;
     }
 
@@ -108,7 +88,6 @@ aead(const uint8_t *nonce, uint8_t *m, uint8_t m_len, const uint8_t *a,
                                  NULL);
     if(ret != CRYPTO_SUCCESS) {
       PRINTF("%s: ccm_auth_decrypt_start() error %u\n", MODULE_NAME, ret);
-      restore_crypto(crypto_enabled);
       return;
     }
 
@@ -118,8 +97,6 @@ aead(const uint8_t *nonce, uint8_t *m, uint8_t m_len, const uint8_t *a,
       PRINTF("%s: ccm_auth_decrypt_get_result() error %u\n", MODULE_NAME, ret);
     }
   }
-
-  restore_crypto(crypto_enabled);
 }
 /*---------------------------------------------------------------------------*/
 const struct ccm_star_driver cc2538_ccm_star_driver = {

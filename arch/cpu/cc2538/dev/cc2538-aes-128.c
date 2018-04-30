@@ -53,31 +53,12 @@
 #else
 #define PRINTF(...)
 #endif
-/*---------------------------------------------------------------------------*/
-static uint8_t
-enable_crypto(void)
-{
-  uint8_t enabled = CRYPTO_IS_ENABLED();
-  if(!enabled) {
-    crypto_enable();
-  }
-  return enabled;
-}
-/*---------------------------------------------------------------------------*/
-static void
-restore_crypto(uint8_t enabled)
-{
-  if(!enabled) {
-    crypto_disable();
-  }
-}
+
 /*---------------------------------------------------------------------------*/
 static void
 set_key(const uint8_t *key)
 {
-  uint8_t crypto_enabled, ret;
-
-  crypto_enabled = enable_crypto();
+  uint8_t ret;
 
   ret = aes_load_keys(key, AES_KEY_STORE_SIZE_KEY_SIZE_128, 1,
                       CC2538_AES_128_KEY_AREA);
@@ -85,17 +66,13 @@ set_key(const uint8_t *key)
     PRINTF("%s: aes_load_keys() error %u\n", MODULE_NAME, ret);
     sys_ctrl_reset();
   }
-
-  restore_crypto(crypto_enabled);
 }
 /*---------------------------------------------------------------------------*/
 static void
 encrypt(uint8_t *plaintext_and_result)
 {
-  uint8_t crypto_enabled, ret;
+  uint8_t ret;
   int8_t res;
-
-  crypto_enabled = enable_crypto();
 
   ret = ecb_crypt_start(true, CC2538_AES_128_KEY_AREA, plaintext_and_result,
                         plaintext_and_result, AES_128_BLOCK_SIZE, NULL);
@@ -109,8 +86,6 @@ encrypt(uint8_t *plaintext_and_result)
     PRINTF("%s: ecb_crypt_check_status() error %d\n", MODULE_NAME, res);
     sys_ctrl_reset();
   }
-
-  restore_crypto(crypto_enabled);
 }
 /*---------------------------------------------------------------------------*/
 const struct aes_128_driver cc2538_aes_128_driver = {

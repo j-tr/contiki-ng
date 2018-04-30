@@ -67,43 +67,20 @@ crypto_isr(void)
   }
 }
 /*---------------------------------------------------------------------------*/
-static bool
-permit_pm1(void)
-{
-  return REG(AES_CTRL_ALG_SEL) == 0;
-}
-/*---------------------------------------------------------------------------*/
 void
 crypto_init(void)
 {
   volatile int i;
 
-  lpm_register_peripheral(permit_pm1);
-
-  crypto_enable();
+  /* Enable the clock for the AES/SHA cryptoprocessor */
+  REG(SYS_CTRL_RCGCSEC) |= SYS_CTRL_RCGCSEC_AES;
+  REG(SYS_CTRL_SCGCSEC) |= SYS_CTRL_SCGCSEC_AES;
+  REG(SYS_CTRL_DCGCSEC) |= SYS_CTRL_DCGCSEC_AES;
 
   /* Reset the AES/SHA cryptoprocessor */
   REG(SYS_CTRL_SRSEC) |= SYS_CTRL_SRSEC_AES;
   for(i = 0; i < 16; i++);
   REG(SYS_CTRL_SRSEC) &= ~SYS_CTRL_SRSEC_AES;
-}
-/*---------------------------------------------------------------------------*/
-void
-crypto_enable(void)
-{
-  /* Enable the clock for the AES/SHA cryptoprocessor */
-  REG(SYS_CTRL_RCGCSEC) |= SYS_CTRL_RCGCSEC_AES;
-  REG(SYS_CTRL_SCGCSEC) |= SYS_CTRL_SCGCSEC_AES;
-  REG(SYS_CTRL_DCGCSEC) |= SYS_CTRL_DCGCSEC_AES;
-}
-/*---------------------------------------------------------------------------*/
-void
-crypto_disable(void)
-{
-  /* Gate the clock for the AES/SHA cryptoprocessor */
-  REG(SYS_CTRL_RCGCSEC) &= ~SYS_CTRL_RCGCSEC_AES;
-  REG(SYS_CTRL_SCGCSEC) &= ~SYS_CTRL_SCGCSEC_AES;
-  REG(SYS_CTRL_DCGCSEC) &= ~SYS_CTRL_DCGCSEC_AES;
 }
 /*---------------------------------------------------------------------------*/
 void
