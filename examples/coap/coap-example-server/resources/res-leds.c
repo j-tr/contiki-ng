@@ -75,8 +75,10 @@ res_post_put_handler(coap_message_t *request, coap_message_t *response, uint8_t 
       led = LEDS_RED;
     } else if(strncmp(color, "g", len) == 0) {
       led = LEDS_GREEN;
-    } else if(strncmp(color, "b", len) == 0) {
-      led = LEDS_BLUE;
+    } else if(strncmp(color, "y", len) == 0) {
+      led = LEDS_YELLOW;
+    } else if(strncmp(color, "o", len) == 0) {
+      led = LEDS_ORANGE;
     } else {
       success = 0;
     }
